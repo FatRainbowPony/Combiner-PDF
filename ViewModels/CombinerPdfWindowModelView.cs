@@ -1,9 +1,11 @@
 ﻿using Combiner_PDF.Support;
+using GongSolutions.Wpf.DragDrop;
 using PdfSharp.Pdf;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,13 +16,15 @@ using System.Windows.Media;
 
 namespace Combiner_PDF.ViewModels
 {
-    public class CombinerPdfWindowModelView: Base.ModelView
+    public class CombinerPdfWindowModelView: Base.ModelView, IDropTarget
     {
         #region Fields
 
         #region Private
         private string pathToPdfDocument;
         private ImageSource iconDoc;
+        private ObservableCollection<string> pathsToPdfDocuments = new ObservableCollection<string>();
+        //private ObservableCollection<ImageSource> iconsPdfDocuments = new ObservableCollection<ImageSource>();
         private ObservableCollection<Models.PdfDoc> listOfPdfDocs = new ObservableCollection<Models.PdfDoc>();
         private bool isActiveMerging;
         private bool isActiveAddingPdfDoc;
@@ -131,6 +135,82 @@ namespace Combiner_PDF.ViewModels
             {
                 IsActiveDeletingAllPdfDocs = false;
             }
+        }
+
+        void IDropTarget.DragOver(IDropInfo dropInfo)
+        {
+            var dragFilesList = ((DataObject)dropInfo.Data).GetFileDropList().Cast<string>();
+
+            //var pathsToPdfDocuments = new ObservableCollection<string>();
+            //var iconsPdfDocuments = new ObservableCollection<ImageSource>();
+
+            var sortDragFilesList = new List<string>();
+
+            sortDragFilesList = (dragFilesList as List<string>).FindAll(dragFile => dragFile.ToString()).Distinct();
+
+            foreach (var dragFile in sortDragFilesList)
+            {
+                pathsToPdfDocuments.Add(Path.GetFullPath(dragFile));
+                //iconsPdfDocuments.Add(IconWorker.FileToImageIconConverter(Path.GetFullPath(dragFile)));
+            }
+
+            //foreach (var pathToPdfDocument in pathsToPdfDocuments)
+            //{
+            //    iconsPdfDocuments.Add(IconWorker.FileToImageIconConverter(pathToPdfDocument));
+            //}
+
+            if (pathsToPdfDocuments != null /*&& iconsPdfDocuments != null*/)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                dropInfo.Effects = DragDropEffects.Copy;
+            }
+
+            //dropInfo.Effects = dragFileList.Any(item =>
+            //{
+            //    var extension = Path.GetFullPath(item);
+            //    return extension != null;
+            //}) ? DragDropEffects.Copy : DragDropEffects.None;
+        }
+
+        void IDropTarget.Drop(IDropInfo dropInfo)
+        {
+            //ListOfPdfDocs.Clear();
+            
+            foreach (var pathToPdfDocument in pathsToPdfDocuments)
+            {
+                //foreach (var iconPdfDocument in iconsPdfDocuments)
+                //{
+                var newPdfDoc = new Models.PdfDoc
+                {
+                    PathToPdfDocument = pathToPdfDocument,
+                    IconDoc = IconWorker.FileToImageIconConverter(pathToPdfDocument)
+                };
+
+                    ListOfPdfDocs.Add(newPdfDoc);
+                //}
+            }
+
+            this.PathToPdfDocument = string.Empty;
+            this.IconDoc = default;
+
+            CheckAbilityUnlockBuuttons();
+
+            //var dragFileList = ((DataObject)dropInfo.Data).GetFileDropList().Cast<string>();
+            //dropInfo.Effects = dragFileList.Any(item =>
+            //{
+            //    var extension = Path.GetExtension(item);
+            //    return extension != null && extension.Equals(".pdf");
+            //}) ? DragDropEffects.Copy : DragDropEffects.None;
+        }
+
+        void IDropTarget.DragEnter(IDropInfo dropInfo)
+        {
+            //
+        }
+
+        void IDropTarget.DragLeave(IDropInfo dropInfo)
+        {
+            //
         }
         #endregion
 

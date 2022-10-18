@@ -70,7 +70,7 @@
             </Border>
         </Grid>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="1">
-            <ListBox x:Name="ListOfPdfDocumnets" ItemsSource="{Binding ListOfPdfDocs}" ItemContainerStyle="{StaticResource ListBoxItemStyle}"  dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+            <ListBox x:Name="ListOfPdfDocumnets" ItemsSource="{Binding ListOfPdfDocs}" ItemContainerStyle="{StaticResource ListBoxItemStyle}"  dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
                      HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" 
                      Background="#FFE0E0E0">
                 <ListBox.ItemTemplate>
