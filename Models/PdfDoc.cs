@@ -19,6 +19,7 @@ namespace Combiner_PDF.Models
 
         #region Public
         public string PathToPdfDocument { get; set; }
+
         public ImageSource IconDoc { get; set; }
         #endregion
 

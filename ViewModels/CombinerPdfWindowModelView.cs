@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -24,8 +25,8 @@ namespace Combiner_PDF.ViewModels
         private string pathToPdfDocument;
         private ImageSource iconDoc;
         private ObservableCollection<string> pathsToPdfDocuments = new ObservableCollection<string>();
-        //private ObservableCollection<ImageSource> iconsPdfDocuments = new ObservableCollection<ImageSource>();
         private ObservableCollection<Models.PdfDoc> listOfPdfDocs = new ObservableCollection<Models.PdfDoc>();
+        private bool isPdfDocument;
         private bool isActiveMerging;
         private bool isActiveAddingPdfDoc;
         private bool isActiveDeletingAllPdfDocs;
@@ -40,7 +41,17 @@ namespace Combiner_PDF.ViewModels
         #region Properties
 
         #region Private
+        private ObservableCollection<string> PathsToPdfDocuments
+        {
+            get => pathsToPdfDocuments;
+            set => Set(ref pathsToPdfDocuments, value);
+        }
 
+        private bool IsPdfDocument
+        {
+            get => isPdfDocument;
+            set => Set(ref isPdfDocument, value);
+        }
         #endregion
 
         #region Public
@@ -100,7 +111,7 @@ namespace Combiner_PDF.ViewModels
 
         private void CheckAbilityUnlockBuuttons()
         {
-            if (!string.IsNullOrEmpty(this.PathToPdfDocument))
+            if (!string.IsNullOrEmpty(PathToPdfDocument))
             {
                 IsActiveAddingPdfDoc = true;
             }
@@ -109,7 +120,7 @@ namespace Combiner_PDF.ViewModels
                 IsActiveAddingPdfDoc = false;
             }
 
-            if (this.ListOfPdfDocs.Count > 1)
+            if (ListOfPdfDocs.Count > 1)
             {
                 IsActiveMerging = true;
             }
@@ -118,7 +129,7 @@ namespace Combiner_PDF.ViewModels
                 IsActiveMerging = false;
             }
 
-            if (this.ListOfPdfDocs.Count > 0)
+            if (ListOfPdfDocs.Count > 0)
             {
                 IsActiveDeletingAllPdfDocs = true;
             }
@@ -127,7 +138,7 @@ namespace Combiner_PDF.ViewModels
                 IsActiveDeletingAllPdfDocs = false;
             }
 
-            if (this.ListOfPdfDocs.Count > 0)
+            if (ListOfPdfDocs.Count > 0)
             {
                 IsActiveDeletingAllPdfDocs = true;
             }
@@ -139,76 +150,82 @@ namespace Combiner_PDF.ViewModels
 
         void IDropTarget.DragOver(IDropInfo dropInfo)
         {
-            var dragFilesList = ((DataObject)dropInfo.Data).GetFileDropList().Cast<string>();
-
-            //var pathsToPdfDocuments = new ObservableCollection<string>();
-            //var iconsPdfDocuments = new ObservableCollection<ImageSource>();
-
-            var sortDragFilesList = new List<string>();
-
-            sortDragFilesList = (dragFilesList as List<string>).FindAll(dragFile => dragFile.ToString()).Distinct();
-
-            foreach (var dragFile in sortDragFilesList)
+            if (dropInfo.Data is Models.PdfDoc)
             {
-                pathsToPdfDocuments.Add(Path.GetFullPath(dragFile));
-                //iconsPdfDocuments.Add(IconWorker.FileToImageIconConverter(Path.GetFullPath(dragFile)));
-            }
-
-            //foreach (var pathToPdfDocument in pathsToPdfDocuments)
-            //{
-            //    iconsPdfDocuments.Add(IconWorker.FileToImageIconConverter(pathToPdfDocument));
-            //}
-
-            if (pathsToPdfDocuments != null /*&& iconsPdfDocuments != null*/)
-            {
-                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
                 dropInfo.Effects = DragDropEffects.Copy;
             }
+            else
+            {
+                IsPdfDocument = false;
 
-            //dropInfo.Effects = dragFileList.Any(item =>
-            //{
-            //    var extension = Path.GetFullPath(item);
-            //    return extension != null;
-            //}) ? DragDropEffects.Copy : DragDropEffects.None;
+                var dragFilesList = (dropInfo.Data as DataObject).GetFileDropList();
+
+                PathsToPdfDocuments.Clear();
+
+                foreach (var dragFile in dragFilesList)
+                {
+                    if (Path.GetExtension(dragFile).ToLower() == ".pdf")
+                    {
+                        IsPdfDocument = true;
+
+                        PathsToPdfDocuments.Add(Path.GetFullPath(dragFile));
+                    }
+                }
+
+                if (IsPdfDocument == true && PathsToPdfDocuments != null)
+                {
+                    dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                    dropInfo.Effects = DragDropEffects.Copy;
+                }
+            }
         }
 
         void IDropTarget.Drop(IDropInfo dropInfo)
         {
-            //ListOfPdfDocs.Clear();
-            
-            foreach (var pathToPdfDocument in pathsToPdfDocuments)
+            if (dropInfo.Data is Models.PdfDoc)
             {
-                //foreach (var iconPdfDocument in iconsPdfDocuments)
-                //{
-                var newPdfDoc = new Models.PdfDoc
+                ListOfPdfDocs.Remove((Models.PdfDoc)dropInfo.Data);
+
+                try
                 {
-                    PathToPdfDocument = pathToPdfDocument,
-                    IconDoc = IconWorker.FileToImageIconConverter(pathToPdfDocument)
-                };
-
-                    ListOfPdfDocs.Add(newPdfDoc);
-                //}
+                    ListOfPdfDocs.Insert(dropInfo.InsertIndex, (Models.PdfDoc)dropInfo.Data);
+                }
+                catch
+                {
+                    ListOfPdfDocs.Add((Models.PdfDoc)dropInfo.Data);
+                }
             }
+            else
+            {
+                if (IsPdfDocument == true)
+                {
+                    var sortPathsToPdfDocuments = PathsToPdfDocuments.Distinct();
 
-            this.PathToPdfDocument = string.Empty;
-            this.IconDoc = default;
+                    foreach (var sortPathToPdfDocument in sortPathsToPdfDocuments)
+                    {
+                        var newPdfDoc = new Models.PdfDoc
+                        {
+                            PathToPdfDocument = sortPathToPdfDocument,
+                            IconDoc = IconWorker.FileToImageIconConverter(sortPathToPdfDocument)
+                        };
 
-            CheckAbilityUnlockBuuttons();
+                        ListOfPdfDocs.Add(newPdfDoc);
+                    }
 
-            //var dragFileList = ((DataObject)dropInfo.Data).GetFileDropList().Cast<string>();
-            //dropInfo.Effects = dragFileList.Any(item =>
-            //{
-            //    var extension = Path.GetExtension(item);
-            //    return extension != null && extension.Equals(".pdf");
-            //}) ? DragDropEffects.Copy : DragDropEffects.None;
+                    PathsToPdfDocuments.Clear();
+
+                    CheckAbilityUnlockBuuttons();
+                }
+            }
         }
 
-        void IDropTarget.DragEnter(IDropInfo dropInfo)
+        void IDropTarget.DragLeave(IDropInfo dropInfo)
         {
             //
         }
 
-        void IDropTarget.DragLeave(IDropInfo dropInfo)
+        void IDropTarget.DragEnter(IDropInfo dropInfo)
         {
             //
         }
@@ -229,8 +246,8 @@ namespace Combiner_PDF.ViewModels
             {
                 return new Commands.VMCommands((obj) =>
                 {
-                    this.PathToPdfDocument = PdfWorker.GetPathToPdfDoc();
-                    this.IconDoc = IconWorker.FileToImageIconConverter(this.PathToPdfDocument);
+                    PathToPdfDocument = PdfWorker.GetPathToPdfDoc();
+                    IconDoc = IconWorker.FileToImageIconConverter(PathToPdfDocument);
 
                     CheckAbilityUnlockBuuttons();
                 }, (obj) => { return true; });
@@ -245,14 +262,24 @@ namespace Combiner_PDF.ViewModels
                 {
                     if (parameter is ObservableCollection<Models.PdfDoc>)
                     {
-                        var pathsToPdfDocuments = new ObservableCollection<string>();
-
-                        foreach (var itemInParameter in (parameter as ObservableCollection<Models.PdfDoc>))
+                        try
                         {
-                            pathsToPdfDocuments.Add(itemInParameter.PathToPdfDocument);
-                        }
+                            var pathsToPdfDocuments = new ObservableCollection<string>();
 
-                        PdfWorker.MergePdfDocuments(pathsToPdfDocuments);
+                            foreach (var itemInParameter in (parameter as ObservableCollection<Models.PdfDoc>))
+                            {
+                                pathsToPdfDocuments.Add(itemInParameter.PathToPdfDocument);
+                            }
+
+                            PdfWorker.MergePdfDocuments(pathsToPdfDocuments);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("\tСлучилась непредвиденная ошибка\t \tВозможно некоторые добавленные файлы не существуют\t", "Ошибка", 
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+
+                            ListOfPdfDocs.Clear();
+                        }
                     }
 
                     CheckAbilityUnlockBuuttons();
@@ -268,14 +295,12 @@ namespace Combiner_PDF.ViewModels
                 {
                     var newPdfDoc = new Models.PdfDoc
                     {
-                        PathToPdfDocument = this.PathToPdfDocument,
-                        IconDoc = this.IconDoc
-                        
+                        PathToPdfDocument = PathToPdfDocument,
+                        IconDoc = IconDoc                      
                     };
 
-                    this.ListOfPdfDocs.Add(newPdfDoc);
-                    this.PathToPdfDocument = string.Empty;
-                    this.IconDoc = default;
+                    ListOfPdfDocs.Add(newPdfDoc);
+                    PathToPdfDocument = string.Empty;
 
                     CheckAbilityUnlockBuuttons();
                 }, (obj) => { return IsNewPathToPdfDocumentCorrect(); });

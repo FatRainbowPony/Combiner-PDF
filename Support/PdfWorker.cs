@@ -39,7 +39,7 @@ namespace Combiner_PDF.Support
         public static string SetPathToPdfDoc()
         {
             var saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = "Добавить PDF-документ";
+            saveFileDialog.Title = "Сохранить PDF-документ";
             saveFileDialog.Filter = "Файлы PDF (*.pdf)|*.pdf";
             saveFileDialog.DefaultExt = "pdf";
 

@@ -70,7 +70,7 @@
             </Border>
         </Grid>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="1">
-            <ListBox x:Name="ListOfPdfDocumnets" ItemsSource="{Binding ListOfPdfDocs}" ItemContainerStyle="{StaticResource ListBoxItemStyle}"  dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
+            <ListBox x:Name="ListOfPdfDocumnets" ItemsSource="{Binding ListOfPdfDocs}" ItemContainerStyle="{StaticResource ListBoxItemStyle}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
                      HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" 
                      Background="#FFE0E0E0">
                 <ListBox.ItemTemplate>
@@ -79,21 +79,36 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.1*"/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="0.12*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.1*"/>
+                                    <ColumnDefinition Width="0.1*"/>
+                                    <ColumnDefinition Width="0.1*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel x:Name="fileIcon" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3">
                                     <Image Width="35" Height="35" Source="{Binding IconDoc, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                                 <TextBox x:Name="PathToPdfDocument" Grid.Column="1" 
-                                     HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                     HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                      Height="30" Margin="3" Background="#FFE0E0E0"
                                      Text="{Binding PathToPdfDocument, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
-                                <Button x:Name="DeletePdfDocument" Grid.Column="2" Content="➖" FontSize="20"
+                                <Button x:Name="MoveUpItem" Grid.Column="2" Content="🠉" FontSize="20"
                                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                                    VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Width="35"
                                     Style="{StaticResource BoxButtonStyle}"
-                                    Command="{Binding DeletePdfDocumentComm}"/>
+                                    Command="{Binding MoveUpPdfDocumentComm}"/>
+                                <Button x:Name="MoveDownItem" Grid.Column="3" Content="🠋" FontSize="20"
+                                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Width="35"
+                                    Style="{StaticResource BoxButtonStyle}"
+                                    Command="{Binding MoveDownPdfDocumentComm}"/>
+                                <Button x:Name="DeletePdfDocument" Grid.Column="4" Content="➖" FontSize="20"
+                                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Width="35"
+                                    Style="{StaticResource BoxButtonStyle}"
+                                    Command="{Binding DeletePdfDocumentComm}" CommandParameter="{Binding TemplatedParent.Content, RelativeSource={RelativeSource Self}}"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
