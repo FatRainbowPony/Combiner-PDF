@@ -36,7 +36,7 @@ namespace Combiner_PDF.Support
             return pathToPdfDoc;
         }
 
-        public static string SetPathToPdfDoc()
+        private static string SetPathToPdfDoc()
         {
             var saveFileDialog = new SaveFileDialog();
             saveFileDialog.Title = "Сохранить PDF-документ";

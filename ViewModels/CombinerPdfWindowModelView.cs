@@ -220,12 +220,12 @@ namespace Combiner_PDF.ViewModels
             }
         }
 
-        void IDropTarget.DragLeave(IDropInfo dropInfo)
+        void IDropTarget.DragEnter(IDropInfo dropInfo)
         {
             //
         }
 
-        void IDropTarget.DragEnter(IDropInfo dropInfo)
+        void IDropTarget.DragLeave(IDropInfo dropInfo)
         {
             //
         }
@@ -307,6 +307,70 @@ namespace Combiner_PDF.ViewModels
             }
         }
 
+        public ICommand DeleteAllPdfDocumnets
+        {
+            get
+            {
+                return new Commands.VMCommands((obj) =>
+                {
+                    ListOfPdfDocs.Clear();
+
+                    CheckAbilityUnlockBuuttons();
+                }, (obj) => { return true; });
+            }
+        }
+
+        public ICommand MoveUpPdfDocumentComm
+        {
+            get
+            {
+                return new Commands.VMCommands(parameter =>
+                {
+                    if (parameter is Models.PdfDoc)
+                    {
+                        var index = ListOfPdfDocs.IndexOf(parameter as Models.PdfDoc);
+
+                        if (ListOfPdfDocs.Count > 1)
+                        {
+                            if (ListOfPdfDocs.First() != parameter as Models.PdfDoc)
+                            {
+                                ListOfPdfDocs.Remove(parameter as Models.PdfDoc);
+                                ListOfPdfDocs.Insert(index - 1, parameter as Models.PdfDoc);
+
+                            }
+                        }
+                    }
+
+                    CheckAbilityUnlockBuuttons();
+                }, (obj) => true);
+            }
+        }
+
+        public ICommand MoveDownPdfDocumentComm
+        {
+            get
+            {
+                return new Commands.VMCommands(parameter =>
+                {
+                    if (parameter is Models.PdfDoc)
+                    {
+                        var index = ListOfPdfDocs.IndexOf(parameter as Models.PdfDoc);
+
+                        if (ListOfPdfDocs.Count > 1)
+                        {
+                            if (ListOfPdfDocs.Last() != parameter as Models.PdfDoc)
+                            {
+                                ListOfPdfDocs.Remove(parameter as Models.PdfDoc);
+                                ListOfPdfDocs.Insert(index + 1, parameter as Models.PdfDoc);
+                            }
+                        }
+                    }
+
+                    CheckAbilityUnlockBuuttons();
+                }, (obj) => true);
+            }
+        }
+
         public ICommand DeletePdfDocumentComm
         {
             get
@@ -320,19 +384,6 @@ namespace Combiner_PDF.ViewModels
 
                     CheckAbilityUnlockBuuttons();
                 }, (obj) => true);
-            }
-        }
-
-        public ICommand DeleteAllPdfDocumnets
-        {
-            get
-            {
-                return new Commands.VMCommands((obj) =>
-                {
-                    ListOfPdfDocs.Clear();
-
-                    CheckAbilityUnlockBuuttons();
-                }, (obj) => { return true; });
             }
         }
         #endregion

@@ -96,19 +96,19 @@
                                     VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Width="35"
                                     Style="{StaticResource BoxButtonStyle}"
-                                    Command="{Binding MoveUpPdfDocumentComm}"/>
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.MoveUpPdfDocumentComm}" CommandParameter="{Binding}"/>
                                 <Button x:Name="MoveDownItem" Grid.Column="3" Content="🠋" FontSize="20"
                                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                     VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Width="35"
                                     Style="{StaticResource BoxButtonStyle}"
-                                    Command="{Binding MoveDownPdfDocumentComm}"/>
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.MoveDownPdfDocumentComm}" CommandParameter="{Binding}"/>
                                 <Button x:Name="DeletePdfDocument" Grid.Column="4" Content="➖" FontSize="20"
                                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                     VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Width="35"
                                     Style="{StaticResource BoxButtonStyle}"
-                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path= DataContext.DeletePdfDocumentComm}" CommandParameter="{Binding}"/>
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeletePdfDocumentComm}" CommandParameter="{Binding}"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
