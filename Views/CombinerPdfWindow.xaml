@@ -108,7 +108,7 @@
                                     VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Width="35"
                                     Style="{StaticResource BoxButtonStyle}"
-                                    Command="{Binding DeletePdfDocumentComm}" CommandParameter="{Binding TemplatedParent.Content, RelativeSource={RelativeSource Self}}"/>
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path= DataContext.DeletePdfDocumentComm}" CommandParameter="{Binding}"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
