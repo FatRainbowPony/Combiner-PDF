@@ -6,8 +6,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resourses/ColorsDictionary.xaml" />
-                <ResourceDictionary Source="Resourses/UIStyleDictionary.xaml" />
+                <ResourceDictionary Source="Resources/ColorsDictionary.xaml"/>
+                <ResourceDictionary Source="Resources/UIStyleDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

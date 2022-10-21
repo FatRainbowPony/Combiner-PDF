@@ -1,4 +1,6 @@
 ﻿using Combiner_PDF.Support;
+using Combiner_PDF.ViewModels.Commands.WindowCommands;
+using Combiner_PDF.ViewModels.Commands;
 using GongSolutions.Wpf.DragDrop;
 using PdfSharp.Pdf;
 using System;
@@ -30,6 +32,8 @@ namespace Combiner_PDF.ViewModels
         private bool isActiveMerging;
         private bool isActiveAddingPdfDoc;
         private bool isActiveDeletingAllPdfDocs;
+        private OpenWindowCommand openWindowCommand = new OpenWindowCommand();
+        private ShowDialogCommand showDialogCommand = new ShowDialogCommand();
         #endregion
 
         #region Public
@@ -89,6 +93,17 @@ namespace Combiner_PDF.ViewModels
         {
             get => isActiveDeletingAllPdfDocs;
             set => Set(ref isActiveDeletingAllPdfDocs, value);
+        }
+
+        public OpenWindowCommand OpenWindowCommand 
+        {
+            get => openWindowCommand;
+            set => Set(ref openWindowCommand, value);
+        }
+        public ShowDialogCommand ShowDialogCommand 
+        {
+            get => showDialogCommand;
+            set => Set(ref showDialogCommand, value);
         }
         #endregion
 

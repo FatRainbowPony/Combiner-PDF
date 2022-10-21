@@ -7,9 +7,10 @@
         xmlns:local="clr-namespace:Combiner_PDF.Views" 
         xmlns:viewmodels="clr-namespace:Combiner_PDF.ViewModels"
         mc:Ignorable="d"
-        Title="Combiner PDF" Height="500" Width="650"
+        Title="Combiner PDF" Height="500" Width="720"
         MinWidth="530"
         ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
         Background="{StaticResource MainBackgroundBrush}">
     <Window.DataContext>
         <viewmodels:CombinerPdfWindowModelView/>
@@ -21,7 +22,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1.7*"/>
                 <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
@@ -35,7 +36,7 @@
                            TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="3"/>
                     <TextBox x:Name="PathToPdfDocument" Grid.Column="1" 
                          HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                         Width="290" Height="30" Margin="3" Background="#FFE0E0E0"
+                         Width="310" Height="30" Margin="3" Background="#FFE0E0E0"
                          Text="{Binding PathToPdfDocument, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
                     <Button x:Name="GetPathToPdfComm" Grid.Column="2" Content="..." FontSize="20" Width="35" Height="35"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
@@ -47,6 +48,7 @@
             <Border Grid.Column="1" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
@@ -66,6 +68,11 @@
                         VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3"
                         Style="{StaticResource BoxButtonStyle}"
                         Command="{Binding DeleteAllPdfDocumnets}" CommandParameter="{Binding}" IsEnabled="{Binding IsActiveDeletingAllPdfDocs, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="AboutProgramm" Grid.Column="3" Content="❓" FontSize="15" Width="35" Height="35" 
+                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3"
+                        Style="{StaticResource BoxButtonStyle}"
+                        Command="{Binding ShowDialogCommand}" CommandParameter="{x:Type local:AboutProgrammWindow}"/>
                 </Grid>
             </Border>
         </Grid>
@@ -78,11 +85,11 @@
                         <Border Grid.Row="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.1*"/>
+                                    <ColumnDefinition Width="0.07*"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="0.1*"/>
-                                    <ColumnDefinition Width="0.1*"/>
-                                    <ColumnDefinition Width="0.1*"/>
+                                    <ColumnDefinition Width="0.08*"/>
+                                    <ColumnDefinition Width="0.08*"/>
+                                    <ColumnDefinition Width="0.08*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel x:Name="fileIcon" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3">
                                     <Image Width="35" Height="35" Source="{Binding IconDoc, UpdateSourceTrigger=PropertyChanged}"/>

@@ -5,16 +5,29 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Combiner PDF", "Combiner PDF.csproj", "{16333F39-F851-4025-B80E-DAF8CFFC0466}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Combiner PDF installer", "..\Combiner PDF installer\Combiner PDF installer.vdproj", "{9467CBB2-C45E-4DC1-A272-7A1815317057}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{16333F39-F851-4025-B80E-DAF8CFFC0466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16333F39-F851-4025-B80E-DAF8CFFC0466}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16333F39-F851-4025-B80E-DAF8CFFC0466}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{16333F39-F851-4025-B80E-DAF8CFFC0466}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{16333F39-F851-4025-B80E-DAF8CFFC0466}.Debug|x64.ActiveCfg = Release|Any CPU
+		{16333F39-F851-4025-B80E-DAF8CFFC0466}.Debug|x64.Build.0 = Release|Any CPU
 		{16333F39-F851-4025-B80E-DAF8CFFC0466}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16333F39-F851-4025-B80E-DAF8CFFC0466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16333F39-F851-4025-B80E-DAF8CFFC0466}.Release|x64.ActiveCfg = Release|Any CPU
+		{9467CBB2-C45E-4DC1-A272-7A1815317057}.Debug|Any CPU.ActiveCfg = Release
+		{9467CBB2-C45E-4DC1-A272-7A1815317057}.Debug|x64.ActiveCfg = Release
+		{9467CBB2-C45E-4DC1-A272-7A1815317057}.Debug|x64.Build.0 = Release
+		{9467CBB2-C45E-4DC1-A272-7A1815317057}.Release|Any CPU.ActiveCfg = Release
+		{9467CBB2-C45E-4DC1-A272-7A1815317057}.Release|x64.ActiveCfg = Release
+		{9467CBB2-C45E-4DC1-A272-7A1815317057}.Release|x64.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
