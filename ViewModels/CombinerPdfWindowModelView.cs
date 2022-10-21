@@ -255,6 +255,10 @@ namespace Combiner_PDF.ViewModels
         #region Commands
 
         #region Private
+
+        #endregion
+
+        #region Public
         public ICommand GetPathToPdfComm
         {
             get
@@ -401,10 +405,6 @@ namespace Combiner_PDF.ViewModels
                 }, (obj) => true);
             }
         }
-        #endregion
-
-        #region Public
-
         #endregion
 
         #endregion
