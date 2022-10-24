@@ -58,9 +58,10 @@ namespace Combiner_PDF.Support
             return pathToPdfDoc;
         }
 
-        public static void MergePdfDocuments(ObservableCollection<string> pathsToPdfDocuments)
+        public static bool MergePdfDocuments(ObservableCollection<string> pathsToPdfDocuments, out string path)
         {
             var outputFilePath = SetPathToPdfDoc();
+            var isFinished = false;
             
             if (!string.IsNullOrEmpty(outputFilePath))
             {
@@ -78,7 +79,16 @@ namespace Combiner_PDF.Support
                 }
 
                 outputPdfDocument.Save(outputFilePath);
+                
+                if (File.Exists(outputFilePath))
+                {
+                    isFinished = true;
+                }
             }
+
+            path = outputFilePath;
+
+            return isFinished;
         }
     }
 }

@@ -16,9 +16,11 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace Combiner_PDF.ViewModels
 {
+
     public class CombinerPdfWindowModelView: Base.ModelView, IDropTarget
     {
         #region Fields
@@ -34,6 +36,7 @@ namespace Combiner_PDF.ViewModels
         private bool isActiveDeletingAllPdfDocs;
         private OpenWindowCommand openWindowCommand = new OpenWindowCommand();
         private ShowDialogCommand showDialogCommand = new ShowDialogCommand();
+        private string statusMerging;
         #endregion
 
         #region Public
@@ -105,6 +108,27 @@ namespace Combiner_PDF.ViewModels
             get => showDialogCommand;
             set => Set(ref showDialogCommand, value);
         }
+
+        public string StatusMerging
+        {
+            get => statusMerging;
+            set => Set(ref statusMerging, value);
+        }
+        #endregion
+
+        #endregion
+
+        #region Constructors
+
+        #region Private
+
+        #endregion
+
+        #region Public
+        public CombinerPdfWindowModelView()
+        {
+            StatusMerging = "Ожидание документов для объединения";
+        }
         #endregion
 
         #endregion
@@ -160,6 +184,18 @@ namespace Combiner_PDF.ViewModels
             else
             {
                 IsActiveDeletingAllPdfDocs = false;
+            }
+        }
+
+        private void CheckStatusMerging()
+        {
+            if (ListOfPdfDocs.Count > 1)
+            {
+                StatusMerging = "Добавленные документы могут быть объединены";
+            }
+            else
+            {
+                StatusMerging = "Ожидание документов для объединения";
             }
         }
 
@@ -231,6 +267,7 @@ namespace Combiner_PDF.ViewModels
                     PathsToPdfDocuments.Clear();
 
                     CheckAbilityUnlockBuuttons();
+                    CheckStatusMerging();
                 }
             }
         }
@@ -269,6 +306,7 @@ namespace Combiner_PDF.ViewModels
                     IconDoc = IconWorker.FileToImageIconConverter(PathToPdfDocument);
 
                     CheckAbilityUnlockBuuttons();
+                    CheckStatusMerging();
                 }, (obj) => { return true; });
             }
         }
@@ -283,6 +321,7 @@ namespace Combiner_PDF.ViewModels
                     {
                         try
                         {
+                            var isFinishedMerging = false;
                             var pathsToPdfDocuments = new ObservableCollection<string>();
 
                             foreach (var itemInParameter in (parameter as ObservableCollection<Models.PdfDoc>))
@@ -290,7 +329,29 @@ namespace Combiner_PDF.ViewModels
                                 pathsToPdfDocuments.Add(itemInParameter.PathToPdfDocument);
                             }
 
-                            PdfWorker.MergePdfDocuments(pathsToPdfDocuments);
+                            if (isFinishedMerging == false)
+                            {
+                                StatusMerging = "В процессе объединения";
+                            }
+
+                            isFinishedMerging = PdfWorker.MergePdfDocuments(pathsToPdfDocuments, out string path);
+
+                            if (isFinishedMerging == true)
+                            {
+                                StatusMerging = "Объединение закончено";
+
+                                string args = string.Format("/e, /select, \"{0}\"", path);
+                                
+                                ProcessStartInfo info = new ProcessStartInfo();
+                                info.FileName = "Explorer";
+                                info.Arguments = args;
+                                
+                                Process.Start(info);
+                            }
+                            else
+                            {
+                                StatusMerging = "Ожидание документов для объединения";
+                            }
                         }
                         catch
                         {
@@ -298,6 +359,8 @@ namespace Combiner_PDF.ViewModels
                                 MessageBoxButton.OK, MessageBoxImage.Error);
 
                             ListOfPdfDocs.Clear();
+
+                            CheckStatusMerging();
                         }
                     }
 
@@ -322,6 +385,7 @@ namespace Combiner_PDF.ViewModels
                     PathToPdfDocument = string.Empty;
 
                     CheckAbilityUnlockBuuttons();
+                    CheckStatusMerging();
                 }, (obj) => { return IsNewPathToPdfDocumentCorrect(); });
             }
         }
@@ -335,6 +399,7 @@ namespace Combiner_PDF.ViewModels
                     ListOfPdfDocs.Clear();
 
                     CheckAbilityUnlockBuuttons();
+                    CheckStatusMerging();
                 }, (obj) => { return true; });
             }
         }
@@ -361,6 +426,7 @@ namespace Combiner_PDF.ViewModels
                     }
 
                     CheckAbilityUnlockBuuttons();
+                    CheckStatusMerging();
                 }, (obj) => true);
             }
         }
@@ -386,6 +452,7 @@ namespace Combiner_PDF.ViewModels
                     }
 
                     CheckAbilityUnlockBuuttons();
+                    CheckStatusMerging();
                 }, (obj) => true);
             }
         }
@@ -402,6 +469,7 @@ namespace Combiner_PDF.ViewModels
                     }
 
                     CheckAbilityUnlockBuuttons();
+                    CheckStatusMerging();
                 }, (obj) => true);
             }
         }
