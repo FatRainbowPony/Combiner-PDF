@@ -126,9 +126,6 @@
     <Compile Include="ViewModels\Base\ModelView.cs" />
     <Compile Include="ViewModels\Commands\VMCommands.cs" />
     <Compile Include="ViewModels\CombinerPdfWindowModelView.cs" />
-    <Compile Include="Views\AboutProgrammWindow.xaml.cs">
-      <DependentUpon>AboutProgrammWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\CombinerPdfWindow.xaml.cs">
       <DependentUpon>CombinerPdfWindow.xaml</DependentUpon>
     </Compile>
@@ -167,10 +164,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\UIStyleDictionary.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\AboutProgrammWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

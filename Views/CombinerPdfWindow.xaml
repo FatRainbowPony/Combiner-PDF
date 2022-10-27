@@ -26,18 +26,18 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.7*"/>
+                    <ColumnDefinition Width="2.2*"/>
                     <ColumnDefinition Width="0.5*"/>
                 </Grid.ColumnDefinitions>
                 <Border Grid.Column="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.22*"/>
-                            <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="2.6*"/>
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="PathToPdfDocument" Grid.Column="1" 
                          HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                         Width="Auto" Height="30" Margin="6" Background="#FFE0E0E0"
+                         Width="Auto" Height="30" Margin="5" Background="#FFE0E0E0"
                          Text="{Binding PathToPdfDoc, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
                         <Button x:Name="GetPathToPdfComm" Grid.Column="0" Content="🗂" FontSize="20" Width="35" Height="35"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
@@ -53,7 +53,6 @@
                 <Border Grid.Column="1" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -83,15 +82,6 @@
                         Command="{Binding DeleteAllPdfDocsComm}" CommandParameter="{Binding}" IsEnabled="{Binding IsActiveDeletingAllPdfDocs, UpdateSourceTrigger=PropertyChanged}">
                             <Button.ToolTip>
                                 <ToolTip x:Name="ToolTipForDeleteAllPdfDocuments" Content="Полная очистка списка PDF-документов для объединения"/>
-                            </Button.ToolTip>
-                        </Button>
-                        <Button x:Name="AboutProgramm" Grid.Column="3" Content="❓" FontSize="15" Width="35" Height="35" 
-                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                        VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3"
-                        Style="{StaticResource BoxButtonStyle}"
-                        Command="{Binding OpenWindowAboutProgram}">
-                            <Button.ToolTip>
-                                <ToolTip x:Name="ToolTipForAboutProgramm" Content="Сведения о программе"/>
                             </Button.ToolTip>
                         </Button>
                     </Grid>

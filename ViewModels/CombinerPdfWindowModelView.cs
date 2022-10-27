@@ -8,7 +8,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Combiner_PDF.Support;
-using Combiner_PDF.Views;
 using GongSolutions.Wpf.DragDrop;
 
 namespace Combiner_PDF.ViewModels
@@ -524,18 +523,6 @@ namespace Combiner_PDF.ViewModels
                         IsVisiblePreview = false;
                     }
                 }, (obj) => true);
-            }
-        }
-
-        public ICommand OpenWindowAboutProgram
-        {
-            get
-            {
-                return new Commands.VMCommands((obj) =>
-                {
-                    var windowAboutProgram = new AboutProgrammWindow();
-                    windowAboutProgram.ShowDialog();
-                }, (obj) => { return true; });
             }
         }
         #endregion
