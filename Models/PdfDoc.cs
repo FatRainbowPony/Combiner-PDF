@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using PdfSharp;
-using PdfSharp.Pdf;
+﻿using System.Windows.Media;
 
 namespace Combiner_PDF.Models
 {
@@ -18,7 +11,7 @@ namespace Combiner_PDF.Models
         #endregion
 
         #region Public
-        public string PathToPdfDocument { get; set; }
+        public string PathToPdfDoc { get; set; }
 
         public ImageSource IconDoc { get; set; }
         #endregion

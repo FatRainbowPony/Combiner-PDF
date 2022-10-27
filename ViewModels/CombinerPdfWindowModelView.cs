@@ -1,41 +1,34 @@
-﻿using Combiner_PDF.Support;
-using Combiner_PDF.ViewModels.Commands.WindowCommands;
-using Combiner_PDF.ViewModels.Commands;
-using GongSolutions.Wpf.DragDrop;
-using PdfSharp.Pdf;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
-using System.Diagnostics;
+using System.Windows.Media.Imaging;
+using Combiner_PDF.Support;
+using Combiner_PDF.Views;
+using GongSolutions.Wpf.DragDrop;
 
 namespace Combiner_PDF.ViewModels
 {
-
     public class CombinerPdfWindowModelView: Base.ModelView, IDropTarget
     {
         #region Fields
 
         #region Private
-        private string pathToPdfDocument;
+        private string pathToPdfDoc;
+        private string namePdfDoc;
         private ImageSource iconDoc;
-        private ObservableCollection<string> pathsToPdfDocuments = new ObservableCollection<string>();
+        private BitmapSource previewPdfDoc;
+        private ObservableCollection<string> pathsToPdfDocs = new ObservableCollection<string>();
         private ObservableCollection<Models.PdfDoc> listOfPdfDocs = new ObservableCollection<Models.PdfDoc>();
-        private bool isPdfDocument;
+        private bool isPdfDoc;
         private bool isActiveMerging;
         private bool isActiveAddingPdfDoc;
         private bool isActiveDeletingAllPdfDocs;
-        private OpenWindowCommand openWindowCommand = new OpenWindowCommand();
-        private ShowDialogCommand showDialogCommand = new ShowDialogCommand();
+        private bool isVisiblePreview;
         private string statusMerging;
         #endregion
 
@@ -48,30 +41,42 @@ namespace Combiner_PDF.ViewModels
         #region Properties
 
         #region Private
-        private ObservableCollection<string> PathsToPdfDocuments
+        private ObservableCollection<string> PathsToPdfDocs
         {
-            get => pathsToPdfDocuments;
-            set => Set(ref pathsToPdfDocuments, value);
+            get => pathsToPdfDocs;
+            set => Set(ref pathsToPdfDocs, value);
         }
 
         private bool IsPdfDocument
         {
-            get => isPdfDocument;
-            set => Set(ref isPdfDocument, value);
+            get => isPdfDoc;
+            set => Set(ref isPdfDoc, value);
         }
         #endregion
 
         #region Public
-        public string PathToPdfDocument
+        public string PathToPdfDoc
         {
-            get => pathToPdfDocument;
-            set => Set(ref pathToPdfDocument, value);
+            get => pathToPdfDoc;
+            set => Set(ref pathToPdfDoc, value);
+        }
+
+        public string NamePdfDoc
+        {
+            get => namePdfDoc;
+            set => Set(ref namePdfDoc, value);
         }
 
         public ImageSource IconDoc
         {
             get => iconDoc;
             set => Set(ref iconDoc, value);
+        }
+
+        public BitmapSource PreviewPdfDoc
+        {
+            get => previewPdfDoc;
+            set => Set(ref previewPdfDoc, value);
         }
 
         public ObservableCollection<Models.PdfDoc> ListOfPdfDocs
@@ -98,15 +103,10 @@ namespace Combiner_PDF.ViewModels
             set => Set(ref isActiveDeletingAllPdfDocs, value);
         }
 
-        public OpenWindowCommand OpenWindowCommand 
+        public bool IsVisiblePreview
         {
-            get => openWindowCommand;
-            set => Set(ref openWindowCommand, value);
-        }
-        public ShowDialogCommand ShowDialogCommand 
-        {
-            get => showDialogCommand;
-            set => Set(ref showDialogCommand, value);
+            get => isVisiblePreview;
+            set => Set(ref isVisiblePreview, value);
         }
 
         public string StatusMerging
@@ -128,6 +128,8 @@ namespace Combiner_PDF.ViewModels
         public CombinerPdfWindowModelView()
         {
             StatusMerging = "Ожидание документов для объединения";
+
+            IsVisiblePreview = false;
         }
         #endregion
 
@@ -136,11 +138,11 @@ namespace Combiner_PDF.ViewModels
         #region Methods
 
         #region Private
-        private bool IsNewPathToPdfDocumentCorrect()
+        private bool IsNewPathToPdfDocCorrect()
         {
-            if (!string.IsNullOrEmpty(PathToPdfDocument))
+            if (!string.IsNullOrEmpty(PathToPdfDoc))
             {
-                if (!string.IsNullOrWhiteSpace(PathToPdfDocument))
+                if (!string.IsNullOrWhiteSpace(PathToPdfDoc))
                 {
                     return true;
                 }
@@ -150,7 +152,7 @@ namespace Combiner_PDF.ViewModels
 
         private void CheckAbilityUnlockBuuttons()
         {
-            if (!string.IsNullOrEmpty(PathToPdfDocument))
+            if (!string.IsNullOrEmpty(PathToPdfDoc))
             {
                 IsActiveAddingPdfDoc = true;
             }
@@ -212,7 +214,7 @@ namespace Combiner_PDF.ViewModels
 
                 var dragFilesList = (dropInfo.Data as DataObject).GetFileDropList();
 
-                PathsToPdfDocuments.Clear();
+                PathsToPdfDocs.Clear();
 
                 foreach (var dragFile in dragFilesList)
                 {
@@ -220,11 +222,11 @@ namespace Combiner_PDF.ViewModels
                     {
                         IsPdfDocument = true;
 
-                        PathsToPdfDocuments.Add(Path.GetFullPath(dragFile));
+                        PathsToPdfDocs.Add(Path.GetFullPath(dragFile));
                     }
                 }
 
-                if (IsPdfDocument == true && PathsToPdfDocuments != null)
+                if (IsPdfDocument == true && PathsToPdfDocs != null)
                 {
                     dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
                     dropInfo.Effects = DragDropEffects.Copy;
@@ -251,20 +253,20 @@ namespace Combiner_PDF.ViewModels
             {
                 if (IsPdfDocument == true)
                 {
-                    var sortPathsToPdfDocuments = PathsToPdfDocuments.Distinct();
+                    var sortPathsToPdfDocs = PathsToPdfDocs.Distinct();
 
-                    foreach (var sortPathToPdfDocument in sortPathsToPdfDocuments)
+                    foreach (var sortPathToPdfDoc in sortPathsToPdfDocs)
                     {
                         var newPdfDoc = new Models.PdfDoc
                         {
-                            PathToPdfDocument = sortPathToPdfDocument,
-                            IconDoc = IconWorker.FileToImageIconConverter(sortPathToPdfDocument)
+                            PathToPdfDoc = sortPathToPdfDoc,
+                            IconDoc = IconWorker.FileToImageIconConverter(sortPathToPdfDoc)
                         };
 
                         ListOfPdfDocs.Add(newPdfDoc);
                     }
 
-                    PathsToPdfDocuments.Clear();
+                    PathsToPdfDocs.Clear();
 
                     CheckAbilityUnlockBuuttons();
                     CheckStatusMerging();
@@ -296,14 +298,14 @@ namespace Combiner_PDF.ViewModels
         #endregion
 
         #region Public
-        public ICommand GetPathToPdfComm
+        public ICommand GetPathToPdfDocComm
         {
             get
             {
                 return new Commands.VMCommands((obj) =>
                 {
-                    PathToPdfDocument = PdfWorker.GetPathToPdfDoc();
-                    IconDoc = IconWorker.FileToImageIconConverter(PathToPdfDocument);
+                    PathToPdfDoc = PdfWorker.GetPathToPdfDoc();
+                    IconDoc = IconWorker.FileToImageIconConverter(PathToPdfDoc);
 
                     CheckAbilityUnlockBuuttons();
                     CheckStatusMerging();
@@ -311,7 +313,7 @@ namespace Combiner_PDF.ViewModels
             }
         }
 
-        public ICommand MergePdfDocumentsComm
+        public ICommand MergePdfDocsComm
         {
             get
             {
@@ -322,11 +324,11 @@ namespace Combiner_PDF.ViewModels
                         try
                         {
                             var isFinishedMerging = false;
-                            var pathsToPdfDocuments = new ObservableCollection<string>();
+                            var pathsToPdfDocs = new ObservableCollection<string>();
 
                             foreach (var itemInParameter in (parameter as ObservableCollection<Models.PdfDoc>))
                             {
-                                pathsToPdfDocuments.Add(itemInParameter.PathToPdfDocument);
+                                pathsToPdfDocs.Add(itemInParameter.PathToPdfDoc);
                             }
 
                             if (isFinishedMerging == false)
@@ -334,33 +336,44 @@ namespace Combiner_PDF.ViewModels
                                 StatusMerging = "В процессе объединения";
                             }
 
-                            isFinishedMerging = PdfWorker.MergePdfDocuments(pathsToPdfDocuments, out string path);
+                            isFinishedMerging = PdfWorker.MergePdfDocuments(pathsToPdfDocs, out string path);
 
                             if (isFinishedMerging == true)
                             {
                                 StatusMerging = "Объединение закончено";
 
                                 string args = string.Format("/e, /select, \"{0}\"", path);
-                                
+
                                 ProcessStartInfo info = new ProcessStartInfo();
                                 info.FileName = "Explorer";
                                 info.Arguments = args;
-                                
+
                                 Process.Start(info);
                             }
                             else
                             {
-                                StatusMerging = "Ожидание документов для объединения";
+                                CheckStatusMerging();
                             }
                         }
-                        catch
+                        catch(Exception exception)
                         {
-                            MessageBox.Show("\tСлучилась непредвиденная ошибка\t \tВозможно некоторые добавленные файлы не существуют\t", "Ошибка", 
-                                MessageBoxButton.OK, MessageBoxImage.Error);
+                            if (exception is FileNotFoundException)
+                            {
+                                MessageBox.Show("Случилась непредвиденная ошибка\r\nВозможно некоторые добавленные файлы не существуют", "Ошибка",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
 
-                            ListOfPdfDocs.Clear();
+                                ListOfPdfDocs.Clear();
 
-                            CheckStatusMerging();
+                                CheckStatusMerging();
+                            }
+
+                            if (exception is IOException)
+                            {
+                                MessageBox.Show("Случилась непредвиденная ошибка\r\nВозможно файл с таким именем используется другим приложением", "Ошибка",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
+
+                                CheckStatusMerging();
+                            }
                         }
                     }
 
@@ -369,7 +382,7 @@ namespace Combiner_PDF.ViewModels
             }
         }
 
-        public ICommand AddPdfDocumentComm
+        public ICommand AddPdfDocComm
         {
             get
             {
@@ -377,20 +390,20 @@ namespace Combiner_PDF.ViewModels
                 {
                     var newPdfDoc = new Models.PdfDoc
                     {
-                        PathToPdfDocument = PathToPdfDocument,
+                        PathToPdfDoc = PathToPdfDoc,
                         IconDoc = IconDoc                      
                     };
 
                     ListOfPdfDocs.Add(newPdfDoc);
-                    PathToPdfDocument = string.Empty;
+                    PathToPdfDoc = string.Empty;
 
                     CheckAbilityUnlockBuuttons();
                     CheckStatusMerging();
-                }, (obj) => { return IsNewPathToPdfDocumentCorrect(); });
+                }, (obj) => { return IsNewPathToPdfDocCorrect(); });
             }
         }
 
-        public ICommand DeleteAllPdfDocumnets
+        public ICommand DeleteAllPdfDocsComm
         {
             get
             {
@@ -404,7 +417,7 @@ namespace Combiner_PDF.ViewModels
             }
         }
 
-        public ICommand MoveUpPdfDocumentComm
+        public ICommand MoveUpPdfDocComm
         {
             get
             {
@@ -431,7 +444,7 @@ namespace Combiner_PDF.ViewModels
             }
         }
 
-        public ICommand MoveDownPdfDocumentComm
+        public ICommand MoveDownPdfDocComm
         {
             get
             {
@@ -457,7 +470,7 @@ namespace Combiner_PDF.ViewModels
             }
         }
 
-        public ICommand DeletePdfDocumentComm
+        public ICommand DeletePdfDocComm
         {
             get
             {
@@ -471,6 +484,58 @@ namespace Combiner_PDF.ViewModels
                     CheckAbilityUnlockBuuttons();
                     CheckStatusMerging();
                 }, (obj) => true);
+            }
+        }
+
+        public ICommand OpenPreviewPdfDocComm
+        {
+            get
+            {
+                return new Commands.VMCommands(parameter =>
+                {
+                    if (parameter is Models.PdfDoc)
+                    {
+                        try
+                        {
+                            NamePdfDoc = Path.GetFileName((parameter as Models.PdfDoc).PathToPdfDoc);
+
+                            PreviewPdfDoc = BitmapWorker.ToBitmapSource(PdfiumViewer.Core.PdfDocument.Load((parameter as Models.PdfDoc).PathToPdfDoc).Render(0, 400, 550, 1920, 1080, false));
+
+                            IsVisiblePreview = true;
+                        }
+                        catch{}
+                    }
+                }, (obj) => true);
+            }
+        }
+
+        public ICommand ClosePreviewPdfDocComm
+        {
+            get
+            {
+                return new Commands.VMCommands(parameter =>
+                {
+                    if (parameter is Models.PdfDoc)
+                    {
+                        NamePdfDoc = string.Empty;
+                        
+                        PreviewPdfDoc = default;
+
+                        IsVisiblePreview = false;
+                    }
+                }, (obj) => true);
+            }
+        }
+
+        public ICommand OpenWindowAboutProgram
+        {
+            get
+            {
+                return new Commands.VMCommands((obj) =>
+                {
+                    var windowAboutProgram = new AboutProgrammWindow();
+                    windowAboutProgram.ShowDialog();
+                }, (obj) => { return true; });
             }
         }
         #endregion

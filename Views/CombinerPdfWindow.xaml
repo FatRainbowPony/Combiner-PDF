@@ -3,158 +3,206 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
-        xmlns:local="clr-namespace:Combiner_PDF.Views" 
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:viewmodels="clr-namespace:Combiner_PDF.ViewModels"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         mc:Ignorable="d"
-        Title="Combiner PDF" Height="500" Width="720"
-        MinWidth="530"
+        Title="Combiner PDF" Height="600" Width="730"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource MainBackgroundBrush}">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BolleanToVisibility"/>
+    </Window.Resources>
     <Window.DataContext>
         <viewmodels:CombinerPdfWindowModelView/>
     </Window.DataContext>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="9*"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.7*"/>
-                <ColumnDefinition Width="0.5*"/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.7*"/>
-                        <ColumnDefinition Width="1.3*"/>
-                        <ColumnDefinition Width="0.2*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="AnnotationForPathToPdfDocument" Grid.Column="0" Text="Путь до PDF-документа:" FontSize="14"
-                           TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="3"/>
-                    <TextBox x:Name="PathToPdfDocument" Grid.Column="1" 
+        <Grid Panel.ZIndex="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="12*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.7*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.22*"/>
+                            <ColumnDefinition Width="2.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="PathToPdfDocument" Grid.Column="1" 
                          HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                         Width="310" Height="30" Margin="3" Background="#FFE0E0E0"
-                         Text="{Binding PathToPdfDocument, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
-                    <Button x:Name="GetPathToPdfComm" Grid.Column="2" Content="..." FontSize="20" Width="35" Height="35"
+                         Width="Auto" Height="30" Margin="6" Background="#FFE0E0E0"
+                         Text="{Binding PathToPdfDoc, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+                        <Button x:Name="GetPathToPdfComm" Grid.Column="0" Content="🗂" FontSize="20" Width="35" Height="35"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                         VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="3"
                         Style="{StaticResource BoxButtonStyle}"
-                        Command="{Binding GetPathToPdfComm}">
-                        <Button.ToolTip>
-                            <ToolTip x:Name="ToolTipForGetPathToPdfDocument" Content="Выбор PDF-документа для добавления"/>
-                        </Button.ToolTip>
-                    </Button>
-                </Grid>
-            </Border>
-            <Border Grid.Column="1" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="MergingPdfDocumnets" Grid.Column="0" Content="✨" FontSize="17" Width="35" Height="35"
+                        Command="{Binding GetPathToPdfDocComm}">
+                            <Button.ToolTip>
+                                <ToolTip x:Name="ToolTipForGetPathToPdfDocument" Content="Выбор PDF-документа для добавления" Placement="Left"/>
+                            </Button.ToolTip>
+                        </Button>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="MergingPdfDocumnets" Grid.Column="0" Content="✨" FontSize="17" Width="35" Height="35"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                         VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3"
                         Style="{StaticResource BoxButtonStyle}"
-                        Command="{Binding MergePdfDocumentsComm}" CommandParameter="{Binding ListOfPdfDocs}" IsEnabled="{Binding IsActiveMerging, UpdateSourceTrigger=PropertyChanged}">
-                        <Button.ToolTip>
-                            <ToolTip x:Name="ToolTipForMergingPdfDocumnets" Content="Объединение PDF-документов"/>
-                        </Button.ToolTip>
-                    </Button>
-                    <Button x:Name="AddPdfDocumnets" Grid.Column="1" Content="➕" FontSize="15" Width="35" Height="35"
+                        Command="{Binding MergePdfDocsComm}" CommandParameter="{Binding ListOfPdfDocs}" IsEnabled="{Binding IsActiveMerging, UpdateSourceTrigger=PropertyChanged}">
+                            <Button.ToolTip>
+                                <ToolTip x:Name="ToolTipForMergingPdfDocumnets" Content="Объединение PDF-документов"/>
+                            </Button.ToolTip>
+                        </Button>
+                        <Button x:Name="AddPdfDocumnets" Grid.Column="1" Content="➕" FontSize="15" Width="35" Height="35"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                         VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3"
                         Style="{StaticResource BoxButtonStyle}"
-                        Command="{Binding AddPdfDocumentComm}" IsEnabled="{Binding IsActiveAddingPdfDoc, UpdateSourceTrigger=PropertyChanged}">
-                        <Button.ToolTip>
-                            <ToolTip x:Name="ToolTipForAddPdfDocumnets" Content="Добавление PDF-документа в список для объединения"/>
-                        </Button.ToolTip>
-                    </Button>
-                    <Button x:Name="DeleteAllPdfDocuments" Grid.Column="2" Content="🗑" FontSize="15" Width="35" Height="35"
+                        Command="{Binding AddPdfDocComm}" IsEnabled="{Binding IsActiveAddingPdfDoc, UpdateSourceTrigger=PropertyChanged}">
+                            <Button.ToolTip>
+                                <ToolTip x:Name="ToolTipForAddPdfDocumnets" Content="Добавление PDF-документа в список для объединения"/>
+                            </Button.ToolTip>
+                        </Button>
+                        <Button x:Name="DeleteAllPdfDocuments" Grid.Column="2" Content="🗑" FontSize="15" Width="35" Height="35"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                         VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3"
                         Style="{StaticResource BoxButtonStyle}"
-                        Command="{Binding DeleteAllPdfDocumnets}" CommandParameter="{Binding}" IsEnabled="{Binding IsActiveDeletingAllPdfDocs, UpdateSourceTrigger=PropertyChanged}">
-                        <Button.ToolTip>
-                            <ToolTip x:Name="ToolTipForDeleteAllPdfDocuments" Content="Полная очистка списка PDF-документов для объединения"/>
-                        </Button.ToolTip>
-                    </Button>
-                    <Button x:Name="AboutProgramm" Grid.Column="3" Content="❓" FontSize="15" Width="35" Height="35" 
+                        Command="{Binding DeleteAllPdfDocsComm}" CommandParameter="{Binding}" IsEnabled="{Binding IsActiveDeletingAllPdfDocs, UpdateSourceTrigger=PropertyChanged}">
+                            <Button.ToolTip>
+                                <ToolTip x:Name="ToolTipForDeleteAllPdfDocuments" Content="Полная очистка списка PDF-документов для объединения"/>
+                            </Button.ToolTip>
+                        </Button>
+                        <Button x:Name="AboutProgramm" Grid.Column="3" Content="❓" FontSize="15" Width="35" Height="35" 
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                         VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3"
                         Style="{StaticResource BoxButtonStyle}"
-                        Command="{Binding ShowDialogCommand}" CommandParameter="{x:Type local:AboutProgrammWindow}">
-                        <Button.ToolTip>
-                            <ToolTip x:Name="ToolTipForAboutProgramm" Content="Сведения о программе"/>
-                        </Button.ToolTip>
-                    </Button>
-                </Grid>
-            </Border>
-        </Grid>
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="1">
-            <ListBox x:Name="ListOfPdfDocumnets" ItemsSource="{Binding ListOfPdfDocs}" ItemContainerStyle="{StaticResource ListBoxItemStyle}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
+                        Command="{Binding OpenWindowAboutProgram}">
+                            <Button.ToolTip>
+                                <ToolTip x:Name="ToolTipForAboutProgramm" Content="Сведения о программе"/>
+                            </Button.ToolTip>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+            <ScrollViewer  Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="1">
+                <ListBox x:Name="ListOfPdfDocumnets" ItemsSource="{Binding ListOfPdfDocs}" ItemContainerStyle="{StaticResource ListBoxItemStyle}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
                      HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" 
                      Background="#FFE0E0E0">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border Grid.Row="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.07*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="0.08*"/>
-                                    <ColumnDefinition Width="0.08*"/>
-                                    <ColumnDefinition Width="0.08*"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel x:Name="fileIcon" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3">
-                                    <Image Width="35" Height="35" Source="{Binding IconDoc, UpdateSourceTrigger=PropertyChanged}"/>
-                                </StackPanel>
-                                <TextBox x:Name="PathToPdfDocument" Grid.Column="1" 
-                                     HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                     Height="30" Margin="3" Background="#FFE0E0E0"
-                                     Text="{Binding PathToPdfDocument, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
-                                <Button x:Name="MoveUpItem" Grid.Column="2" Content="🠉" FontSize="20"
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Grid.Row="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Height="45" Margin="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.07*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="0.08*"/>
+                                        <ColumnDefinition Width="0.08*"/>
+                                        <ColumnDefinition Width="0.08*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3">
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Image Width="35" Height="35" Source="{Binding IconDoc, UpdateSourceTrigger=PropertyChanged}">
+                                                    <Image.Style>
+                                                        <Style TargetType="{x:Type Image}">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="RenderTransform">
+                                                                        <Setter.Value>
+                                                                            <ScaleTransform ScaleX="1.1" ScaleY="1.1" />
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName = "MouseEnter">
+                                                <i:InvokeCommandAction 
+                                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.OpenPreviewPdfDocComm}" 
+                                                    CommandParameter="{Binding}"/>
+                                            </i:EventTrigger>
+                                            <i:EventTrigger EventName = "MouseLeave">
+                                                <i:InvokeCommandAction 
+                                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.ClosePreviewPdfDocComm}" 
+                                                    CommandParameter="{Binding}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                        <Button.ToolTip>
+                                            <ToolTip Placement="Left">
+                                                Предварительный просмотр PDF-документа
+                                            </ToolTip>
+                                        </Button.ToolTip>
+                                    </Button>
+                                    <TextBox x:Name="PathToPdfDocument" Grid.Column="1" 
+                                         HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                         Height="30" Margin="3" Background="#FFE0E0E0"
+                                         Text="{Binding PathToPdfDoc, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+                                    <Button x:Name="MoveUpItem" Grid.Column="2" Content="🠉" FontSize="20"
                                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                     VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Width="35"
                                     Style="{StaticResource BoxButtonStyle}"
-                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.MoveUpPdfDocumentComm}" CommandParameter="{Binding}">
-                                    <Button.ToolTip>
-                                        <ToolTip x:Name="ToolTipForMoveUpItem" Content="Перемещение PDF-документа в списке для объединения на одну позицию выше"/>
-                                    </Button.ToolTip>
-                                </Button>
-                                <Button x:Name="MoveDownItem" Grid.Column="3" Content="🠋" FontSize="20"
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.MoveUpPdfDocComm}" CommandParameter="{Binding}">
+                                        <Button.ToolTip>
+                                            <ToolTip x:Name="ToolTipForMoveUpItem" Content="Перемещение PDF-документа в списке для объединения на одну позицию выше"/>
+                                        </Button.ToolTip>
+                                    </Button>
+                                    <Button x:Name="MoveDownItem" Grid.Column="3" Content="🠋" FontSize="20"
                                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                     VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Width="35"
                                     Style="{StaticResource BoxButtonStyle}"
-                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.MoveDownPdfDocumentComm}" CommandParameter="{Binding}">
-                                    <Button.ToolTip>
-                                        <ToolTip x:Name="ToolTipForMoveDownItem" Content="Перемещение PDF-документа в списке для объединения на одну позицию ниже"/>
-                                    </Button.ToolTip>
-                                </Button>
-                                <Button x:Name="DeletePdfDocument" Grid.Column="4" Content="➖" FontSize="20"
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.MoveDownPdfDocComm}" CommandParameter="{Binding}">
+                                        <Button.ToolTip>
+                                            <ToolTip x:Name="ToolTipForMoveDownItem" Content="Перемещение PDF-документа в списке для объединения на одну позицию ниже"/>
+                                        </Button.ToolTip>
+                                    </Button>
+                                    <Button x:Name="DeletePdfDocument" Grid.Column="4" Content="➖" FontSize="20"
                                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                     VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Width="35"
                                     Style="{StaticResource BoxButtonStyle}"
-                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeletePdfDocumentComm}" CommandParameter="{Binding}">
-                                    <Button.ToolTip>
-                                        <ToolTip x:Name="ToolTipForDeletePdfDocument" Content="Удаление PDF-документа из списка для объединения в данной позиции"/>
-                                    </Button.ToolTip>
-                                </Button>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
-        <TextBlock x:Name="StatusMerging" Grid.Row="2" Text="{Binding StatusMerging}" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="11"/>
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeletePdfDocComm}" CommandParameter="{Binding}">
+                                        <Button.ToolTip>
+                                            <ToolTip x:Name="ToolTipForDeletePdfDocument" Content="Удаление PDF-документа из списка для объединения в данной позиции"/>
+                                        </Button.ToolTip>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
+            <TextBlock x:Name="StatusMerging" Grid.Row="2" Text="{Binding StatusMerging}" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="11"/>
+        </Grid>
+        <Border Width="400" Visibility="{Binding IsVisiblePreview, Converter={StaticResource BolleanToVisibility}}" Panel.ZIndex="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="9*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Opacity="0.9" Margin="1"/>
+                <TextBlock x:Name="FileNameForView" Grid.Column="0" Text="{Binding NamePdfDoc, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Image Grid.Row="1" Source="{Binding PreviewPdfDoc}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Fill" Opacity="0.9" Margin="1"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
