@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Combiner PDF")]
 [assembly: AssemblyDescription("Предназначено для объединения содержимого файлов формата PDF")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ZOTA")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Combiner PDF")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
@@ -51,6 +51,6 @@ using System.Windows;
 // Можно задать все значения или принять номера сборки и редакции по умолчанию 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1")]
-[assembly: AssemblyFileVersion("1.0.1")]
+[assembly: AssemblyVersion("1.0.0")]
+[assembly: AssemblyFileVersion("1.0.0")]
 [assembly: NeutralResourcesLanguage("ru-RU")]
