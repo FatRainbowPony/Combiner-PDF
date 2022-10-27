@@ -32,16 +32,16 @@
                 <Border Grid.Column="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.22*"/>
                             <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="0.22*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="PathToPdfDocument" Grid.Column="1" 
-                         HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                         Width="Auto" Height="30" Margin="6" Background="#FFE0E0E0"
+                        <TextBox x:Name="PathToPdfDocument" Grid.Column="0" 
+                         HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Width="490" Height="30" Margin="6" Background="#FFE0E0E0"
                          Text="{Binding PathToPdfDoc, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
-                        <Button x:Name="GetPathToPdfComm" Grid.Column="0" Content="🗂" FontSize="20" Width="35" Height="35"
+                        <Button x:Name="GetPathToPdfComm" Grid.Column="1" Content="..." FontSize="20" Width="35" Height="35"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="3"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3"
                         Style="{StaticResource BoxButtonStyle}"
                         Command="{Binding GetPathToPdfDocComm}">
                             <Button.ToolTip>
