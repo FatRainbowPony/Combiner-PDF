@@ -23,24 +23,26 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="12*"/>
-                <RowDefinition/>
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2.2*"/>
-                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="1.7*"/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
+                <Border Grid.Column="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1" HorizontalAlignment="Stretch">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2.5*"/>
-                            <ColumnDefinition Width="0.22*"/>
+                            <ColumnDefinition Width="170"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="45"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="PathToPdfDocument" Grid.Column="0" 
-                         HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"
-                         Width="519" Height="30" Margin="6" Background="#FFE0E0E0"
+                        <TextBlock Text="Путь к PDF-документу:" FontSize="15" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="3"/>
+                        <TextBox x:Name="PathToPdfDocument" Grid.Column="1" 
+                         HorizontalContentAlignment="Left" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                         Height="30" Width="Auto" Margin="6" Background="#FFE0E0E0"
                          Text="{Binding PathToPdfDoc, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
-                        <Button x:Name="GetPathToPdfComm" Grid.Column="1" Content="..." FontSize="20" Width="35" Height="35"
+                        <Button x:Name="GetPathToPdfComm" Grid.Column="2" Content="..." FontSize="20" Width="35" Height="35"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                         VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3"
                         Style="{StaticResource BoxButtonStyle}"
@@ -51,7 +53,7 @@
                         </Button>
                     </Grid>
                 </Border>
-                <Border Grid.Column="1" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1">
+                <Border Grid.Column="1" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Margin="1" HorizontalAlignment="Stretch">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -97,11 +99,11 @@
                             <Border Grid.Row="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Height="45" Margin="1">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.07*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="0.08*"/>
-                                        <ColumnDefinition Width="0.08*"/>
-                                        <ColumnDefinition Width="0.08*"/>
+                                        <ColumnDefinition Width="37"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="37"/>
+                                        <ColumnDefinition Width="37"/>
+                                        <ColumnDefinition Width="37"/>
                                     </Grid.ColumnDefinitions>
                                     <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3">
                                         <Button.Template>
@@ -184,16 +186,23 @@
             </ScrollViewer>
             <TextBlock x:Name="StatusMerging" Grid.Row="2" Text="{Binding StatusMerging}" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="11"/>
         </Grid>
-        <Border Width="400" Visibility="{Binding IsVisiblePreview, Converter={StaticResource BolleanToVisibility}}" Panel.ZIndex="2">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="9*"/>
-                </Grid.RowDefinitions>
-                <Border Grid.Row="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Opacity="0.9" Margin="1"/>
-                <TextBlock x:Name="FileNameForView" Grid.Column="0" Text="{Binding NamePdfDoc, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Image Grid.Row="1" Source="{Binding PreviewPdfDoc}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Fill" Opacity="0.9" Margin="1"/>
-            </Grid>
-        </Border>
+        <Grid Panel.ZIndex="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1" Visibility="{Binding IsVisiblePreview, Converter={StaticResource BolleanToVisibility}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="9*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Style="{StaticResource BorderStyle}" Background="#FFCFCFCF" Opacity="0.9" Margin="1"/>
+                    <TextBlock x:Name="FileNameForView" Grid.Column="0" Text="{Binding NamePdfDoc, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Image Grid.Row="1" Source="{Binding PreviewPdfDoc}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Fill" Opacity="0.9" Margin="1"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
