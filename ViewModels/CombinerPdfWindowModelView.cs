@@ -499,7 +499,9 @@ namespace Combiner_PDF.ViewModels
                         {
                             NamePdfDoc = Path.GetFileName((parameter as Models.PdfDoc).PathToPdfDoc);
 
-                            PreviewPdfDoc = BitmapWorker.ToBitmapSource(PdfiumViewer.Core.PdfDocument.Load((parameter as Models.PdfDoc).PathToPdfDoc).Render(0, 400, 550, 1920, 1080, false));
+                            PreviewPdfDoc = BitmapWorker.ToBitmapSource(PdfiumViewer.Core.PdfDocument.Load
+                                ((parameter as Models.PdfDoc).PathToPdfDoc).Render
+                                (0, (int)System.Windows.SystemParameters.WorkArea.Width, (int)System.Windows.SystemParameters.WorkArea.Height, 1920, 1080, false));
 
                             IsVisiblePreview = true;
                         }
