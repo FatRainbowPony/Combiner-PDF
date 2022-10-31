@@ -8,7 +8,8 @@
         xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         mc:Ignorable="d"
         Title="Combiner PDF" Height="600" Width="730"
-        ResizeMode="CanMinimize"
+        MinWidth="730"
+        ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource MainBackgroundBrush}">
     <Window.Resources>
